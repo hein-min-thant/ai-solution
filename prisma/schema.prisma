@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ContactInquiry {
+  id          String    @id @default(cuid()) // Unique ID for each inquiry
+  name        String
+  email       String
+  phone       String?   // Optional field
+  companyName String
+  country     String
+  jobTitle    String?   // Optional field
+  jobDetails  String
+  createdAt   DateTime  @default(now()) // Timestamp when the inquiry was received
+}

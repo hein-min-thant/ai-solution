@@ -9,9 +9,23 @@ const COOKIE_SECRET = process.env.COOKIE_SECRET!;
 
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json();
+    // Verify critical environment variable
+    if (!COOKIE_SECRET) {
+      throw new Error("Cookie secret is not configured");
+    }
 
-    // Validate input
+    // Parse and validate input
+    let requestBody;
+    try {
+      requestBody = await request.json();
+    } catch (e) {
+      return NextResponse.json(
+        { message: "Invalid request body" },
+        { status: 400 }
+      );
+    }
+
+    const { username, password } = requestBody;
     if (!username || !password) {
       return NextResponse.json(
         { message: "Username and password are required" },
@@ -19,8 +33,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Find user
-    const user = await prisma.adminUser.findUnique({ where: { username } });
+    // Database operations
+    const user = await prisma.adminUser.findUnique({ 
+      where: { username } 
+    });
+    
     if (!user) {
       return NextResponse.json(
         { message: "Invalid credentials" },
@@ -28,7 +45,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Verify password
+    // Password verification
     const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) {
       return NextResponse.json(
@@ -37,20 +54,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create token
+    // JWT creation
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       COOKIE_SECRET,
       { expiresIn: "7d" }
     );
 
-    // Create response
+    // Response preparation
     const response = NextResponse.json(
-      { message: "Login successful" },
+      { message: "Login successful", user: { id: user.id, username: user.username } },
       { status: 200 }
     );
 
-    // Set cookie
+    // Cookie setting
     response.cookies.set({
       name: AUTH_COOKIE_NAME,
       value: token,
@@ -62,13 +79,26 @@ export async function POST(request: Request) {
     });
 
     return response;
+
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login error:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
+
     return NextResponse.json(
-      { message: "Internal server error" },
+      { 
+        message: "Internal server error",
+        details: process.env.NODE_ENV === "development" 
+          ? (error instanceof Error ? error.message : "Unknown error")
+          : undefined
+      },
       { status: 500 }
     );
   } finally {
-    await prisma.$disconnect();
+    await prisma.$disconnect().catch(error => {
+      console.error("Error disconnecting Prisma:", error);
+    });
   }
 }

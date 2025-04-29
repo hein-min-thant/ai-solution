@@ -1,43 +1,38 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse,NextRequest } from "next/server";
-
-const prisma = new PrismaClient();
+// app/api/admin/inquiries/[id]/route.ts
+import { NextResponse, NextRequest } from "next/server";
+import prisma from '@/lib/prisma';  // From singleton
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: number } }
+  { params }: { params: { id: string } }
 ) {
   const inquiryId = params.id;
 
   if (!inquiryId) {
     return NextResponse.json(
-      { message: "Inquiry ID is missing." },
+      { error: "Inquiry ID is required." },
       { status: 400 }
     );
   }
 
   try {
     const inquiry = await prisma.contactInquiry.findUnique({
-      where: {
-        id: inquiryId,
-      },
+      where: { id: inquiryId },
     });
 
     if (!inquiry) {
       return NextResponse.json(
-        { message: "Inquiry not found." },
+        { error: "Inquiry not found." },
         { status: 404 }
       );
     }
 
     return NextResponse.json(inquiry, { status: 200 });
   } catch (error) {
-    console.error("Error fetching single inquiry:", error);
+    console.error("Error fetching inquiry:", error);
     return NextResponse.json(
-      { message: "Failed to fetch inquiry details." },
+      { error: "Internal server error." },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

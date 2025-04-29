@@ -6,8 +6,9 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { params } = context;
   const inquiryId = params.id;
 
   if (!inquiryId) {

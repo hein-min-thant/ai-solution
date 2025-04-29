@@ -1,19 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 
-// Define an interface for the expected context object structure
-interface RouteContext {
-  params: {
-    id: string;
-  };
-}
+// Define types for the expected context object structure
+type DynamicRouteParams = {
+  id: string;
+};
+
+type GetRouteContext = {
+  params: DynamicRouteParams;
+};
 
 const prisma = new PrismaClient();
 
-// Use the defined interface for the second argument's type
+// Use the defined type alias for the second argument's type
 export async function GET(
   request: NextRequest,
-  context: RouteContext
+  context: GetRouteContext
 ) {
   const { params } = context;
   const inquiryId = params.id;
@@ -47,7 +49,6 @@ export async function GET(
       { status: 500 }
     );
   } finally {
-    // As mentioned before, $disconnect is usually not needed in Vercel serverless functions.
     // await prisma.$disconnect();
   }
 }

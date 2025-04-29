@@ -1,24 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 
-// Define types for the expected context object structure
-type DynamicRouteParams = {
-  id: string;
-};
-
-type GetRouteContext = {
-  params: DynamicRouteParams;
-};
-
 const prisma = new PrismaClient();
 
-// Use the defined type alias for the second argument's type
 export async function GET(
   request: NextRequest,
-  context: GetRouteContext
+  context: any // DANGEROUS: Bypasses type checking for the second argument
 ) {
-  const { params } = context;
-  const inquiryId = params.id;
+  // You would still access params like this:
+  const params = context.params;
+  const inquiryId = params.id as string; // Add a type assertion if needed later
 
   if (!inquiryId) {
      return NextResponse.json(

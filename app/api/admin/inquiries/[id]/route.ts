@@ -1,17 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { type NextRequest } from "next/server";
 
 const prisma = new PrismaClient();
 
-interface RequestContext {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(request: NextRequest, context: RequestContext) {
-  const inquiryId = context.params.id;
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const inquiryId = params.id;
 
   if (!inquiryId) {
     return NextResponse.json(

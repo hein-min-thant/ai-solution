@@ -1,11 +1,19 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 
+// Define an interface for the expected context object structure
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
 const prisma = new PrismaClient();
 
+// Use the defined interface for the second argument's type
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: RouteContext
 ) {
   const { params } = context;
   const inquiryId = params.id;
@@ -39,8 +47,7 @@ export async function GET(
       { status: 500 }
     );
   } finally {
-    // Removed comments as requested.
-    // Note: The $disconnect() call might not be necessary or recommended in Vercel serverless environments.
+    // As mentioned before, $disconnect is usually not needed in Vercel serverless functions.
     // await prisma.$disconnect();
   }
 }

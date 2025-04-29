@@ -80,7 +80,7 @@ export async function GET(
 // PUT - Update an event
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const admin = await verifyAdmin(request);
   
@@ -157,7 +157,7 @@ export async function PUT(
 // DELETE - Delete an event
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const admin = await verifyAdmin(request);
   

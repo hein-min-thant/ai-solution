@@ -1,38 +1,46 @@
-// app/api/admin/inquiries/[id]/route.ts
+import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
-import prisma from '@/lib/prisma';  // From singleton
+
+const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+  const { params } = context;
   const inquiryId = params.id;
 
   if (!inquiryId) {
-    return NextResponse.json(
-      { error: "Inquiry ID is required." },
+     return NextResponse.json(
+      { message: "Inquiry ID is missing." },
       { status: 400 }
     );
   }
 
   try {
     const inquiry = await prisma.contactInquiry.findUnique({
-      where: { id: inquiryId },
+      where: {
+        id: inquiryId,
+      },
     });
 
     if (!inquiry) {
       return NextResponse.json(
-        { error: "Inquiry not found." },
+        { message: "Inquiry not found." },
         { status: 404 }
       );
     }
 
     return NextResponse.json(inquiry, { status: 200 });
   } catch (error) {
-    console.error("Error fetching inquiry:", error);
+    console.error("Error fetching single inquiry:", error);
     return NextResponse.json(
-      { error: "Internal server error." },
+      { message: "Failed to fetch inquiry details." },
       { status: 500 }
     );
+  } finally {
+    // Removed comments as requested.
+    // Note: The $disconnect() call might not be necessary or recommended in Vercel serverless environments.
+    // await prisma.$disconnect();
   }
 }

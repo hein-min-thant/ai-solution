@@ -1,17 +1,16 @@
 // app/api/contact/route.ts
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server"; // Import NextResponse for sending responses
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-// Define the POST method handler
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, email, phone, companyName, country, jobTitle, jobDetails } =
       body;
 
-    // Basic validation (enhance as needed)
+
     if (!name || !email || !companyName || !country || !jobDetails) {
       return NextResponse.json(
         { message: "Required fields are missing." },
@@ -30,7 +29,7 @@ export async function POST(request: Request) {
         jobDetails,
       },
     });
-    console.log("New inquiry saved:", newInquiry); // Log for confirmation
+    console.log("New inquiry saved:", newInquiry);
 
     return NextResponse.json(
       { message: "Inquiry submitted successfully!" },
@@ -38,18 +37,17 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("Error saving inquiry:", error);
-    // In production, avoid sending detailed error info to the client
+
     return NextResponse.json(
       { message: "Failed to submit inquiry." },
       { status: 500 }
     );
   } finally {
-    await prisma.$disconnect(); // Disconnect Prisma client
+    await prisma.$disconnect();
   }
 }
 
-// If you only want to allow POST, you don't need to export other methods.
-// Optionally, you can export a handler for other methods to return 405 Method Not Allowed
+
 export function GET() {
   return NextResponse.json({ message: "Method Not Allowed" }, { status: 405 });
 }

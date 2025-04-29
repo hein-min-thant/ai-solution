@@ -1,4 +1,4 @@
-import React from "react"; // Import React
+import React from "react";
 
 interface Event {
   id: string;
@@ -75,7 +75,7 @@ const exampleEvents: Event[] = [
     location: "Sunderland Software Centre, Sunderland, UK",
     description:
       "Networking and talks focused on leveraging AI for business growth in the startup ecosystem.",
-    link: "#", // Replace with actual link or remove
+    link: "#",
   },
   {
     id: "3",

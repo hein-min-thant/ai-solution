@@ -1,8 +1,44 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const res = await fetch("/api/admin/me", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        setIsLoggedIn(data.isLoggedIn);
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/admin/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setIsLoggedIn(false);
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <div>
       <nav className="flex justify-between items-center px-10 y-6 border-b border-gray-800/10 text-lg">
@@ -20,25 +56,38 @@ const Header = () => {
           </Link>
           <Link
             className="text-blue-600 hover:text-amber-600 transition-colors duration-300"
-            href={"/articles"}
+            href={"/solutions"}
           >
             Solutions
           </Link>
           <Link
             className="text-blue-600 hover:text-amber-600 transition-colors duration-300"
-            href={""}
+            href={"/articles"}
           >
             Articles
           </Link>
           <Link
             className="text-blue-600 hover:text-amber-600 transition-colors duration-300"
-            href={""}
+            href={"/contact"}
           >
             Contact Us
           </Link>
         </div>
-        <div className="font-bold text-blue-600 hover:underline underline-offset-2">
-          <Link href={""}>Admin -{">"}</Link>
+        <div className="flex items-center space-x-4">
+          <Link
+            href="/admin/inquiries"
+            className="font-bold text-blue-600 hover:underline underline-offset-2 hover:text-amber-600 transition-colors duration-300"
+          >
+            Admin -{">"}
+          </Link>
+          {isLoggedIn && (
+            <button
+              onClick={handleLogout}
+              className="font-bold text-blue-600 hover:underline underline-offset-2 hover:text-amber-600 transition-colors duration-300"
+            >
+              Logout
+            </button>
+          )}
         </div>
       </nav>
     </div>

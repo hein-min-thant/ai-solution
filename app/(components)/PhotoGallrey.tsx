@@ -1,16 +1,13 @@
-// components/PhotoGallery.tsx
 import Image from "next/image";
-import React from "react"; // Import React
+import React from "react";
 
-// Define the type for a single image object
 interface GalleryImage {
   url: string;
-  alt?: string; // alt is optional
+  alt?: string;
 }
 
-// Define the type for the component's props
 interface PhotoGalleryProps {
-  images: GalleryImage[]; // images should be an array of GalleryImage objects
+  images: GalleryImage[];
 }
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images }) => {
@@ -29,9 +26,9 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images }) => {
             <Image
               src={image.url}
               alt={image.alt || `Gallery image ${index + 1}`}
-              layout="fill" // Or 'responsive' depending on desired behavior
-              objectFit="cover" // Ensures the image covers the area without distortion
-              className="transition-transform duration-300 hover:scale-105" // Optional hover effect
+              layout="fill"
+              objectFit="cover"
+              className="transition-transform duration-300 hover:scale-105"
             />
           </div>
         ))}

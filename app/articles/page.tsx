@@ -1,11 +1,9 @@
-// pages/articles/promote-ai-solution.tsx
+
 import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
-// Assuming you have a Header and Footer component
-// import Header from '../../components/Header';
-// import Footer from '../../components/Footer';
+
 
 const PromoteAiSolutionArticle: React.FC = () => {
   return (
@@ -21,8 +19,7 @@ const PromoteAiSolutionArticle: React.FC = () => {
         />
       </Head>
 
-      {/* Optional: Include your Header component */}
-      {/* <Header /> */}
+
 
       <main className="container mx-auto px-4 py-12 max-w-3xl">
         <article>
@@ -33,14 +30,14 @@ const PromoteAiSolutionArticle: React.FC = () => {
             Learn how our AI-powered platform is shaping the future of work.
           </p>
 
-          {/* Article Image */}
+
           <div className="mb-8">
             <Image
-              src="/images/article-promo.jpg" // Replace with your actual image path
+              src="/img2.png"
               alt="AI-Solution promoting digital employee experience"
-              width={800} // Set appropriate width based on design
-              height={450} // Set appropriate height based on aspect ratio
-              layout="responsive" // Makes the image responsive
+              width={800}
+              height={450}
+              layout="responsive"
               className="rounded-lg shadow-md"
             />
           </div>

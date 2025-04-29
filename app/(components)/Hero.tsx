@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 const Hero = () => {
   return (
@@ -13,7 +14,7 @@ const Hero = () => {
           Empower your workforce with intelligent, affordable solutions designed
           to streamline design, engineering, and innovation.
         </p>
-        <Button>Get Started -{">"}</Button>
+        <Button asChild><Link href="/contact">Get Started -{">"}</Link></Button>
       </div>
       <div className="flex-1 px-10">
         <Image

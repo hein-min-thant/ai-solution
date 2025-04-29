@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import React from "react";
 
 const HeightLight = () => {
@@ -17,7 +18,9 @@ const HeightLight = () => {
             company, reducing production downtime by 28% and improving machine
             efficiency.
           </p>
-          <Button>Explore -{">"}</Button>
+          <Link href="/solutions">
+            <Button>Explore -{">"}</Button>
+          </Link>
         </div>
         <div className="p-10 border-r border-gray-200">
           <h2 className="text-3xl font-semibold mb-4">
@@ -27,7 +30,9 @@ const HeightLight = () => {
             Built an intelligent virtual assistant that automated employee
             onboarding and support, cutting HR response times by 45%.
           </p>
-          <Button>Explore -{">"}</Button>
+          <Link href="/solutions">
+            <Button>Explore -{">"}</Button>
+          </Link>
         </div>
         <div className="p-10">
           <h2 className="text-3xl font-semibold mb-4">
@@ -37,7 +42,9 @@ const HeightLight = () => {
             Implemented a machine learning helpdesk system for a major IT
             services provider, achieving a 40% faster ticket resolution rate.
           </p>
-          <Button>Explore -{">"}</Button>
+          <Link href="/solutions">
+            <Button>Explore -{">"}</Button>
+          </Link>
         </div>
       </div>
     </div>

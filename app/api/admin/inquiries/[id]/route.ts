@@ -1,14 +1,11 @@
-// app/api/admin/inquiries/[id]/route.ts
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
-  const { params } = context;
+type RouteParams = { params: { id: string } };
+
+export async function GET(request: NextRequest, { params }: RouteParams) {
   const inquiryId = params.id;
 
   if (!inquiryId) {

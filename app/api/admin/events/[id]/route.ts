@@ -33,7 +33,7 @@ async function verifyAdmin(request: Request) {
 // GET - Get a single event by ID
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const eventId = params.id;
 

@@ -74,7 +74,7 @@ export async function GET(
 // DELETE - Delete an inquiry
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
   const admin = await verifyAdmin(request);
   

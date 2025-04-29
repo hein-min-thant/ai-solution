@@ -121,14 +121,16 @@ export default function EventsManagementPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-2xl font-bold">Event Management</h1>
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
           <Link href="/admin/inquiries">
-            <Button variant="outline">View Inquiries</Button>
+            <Button variant="outline" className="whitespace-nowrap">
+              View Inquiries
+            </Button>
           </Link>
           <Link href="/admin/events/new">
-            <Button>
+            <Button className="whitespace-nowrap">
               <Plus className="h-4 w-4 mr-2" />
               Add New Event
             </Button>
@@ -156,19 +158,16 @@ export default function EventsManagementPage() {
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Event Details
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Location
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -176,45 +175,47 @@ export default function EventsManagementPage() {
             <tbody className="divide-y divide-gray-200">
               {events.map((event) => (
                 <tr key={event.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {event.name}
+                  <td className="px-4 sm:px-6 py-4">
+                    <div className="flex flex-col">
+                      <div className="text-sm font-medium text-gray-900 mb-1">
+                        {event.name}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {event.date}{event.time ? `, ${event.time}` : ''}
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{event.date}</div>
-                    {event.time && (
-                      <div className="text-sm text-gray-500">{event.time}</div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-500">{event.location}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                     <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                       {event.category}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex justify-end gap-2">
                       <Link href={`/admin/events/${event.id}/edit`}>
-                        <Button variant="outline" size="sm">
-                          <Pencil className="h-4 w-4 mr-1" />
-                          Edit
+                        <Button variant="outline" size="sm" className="h-9 px-2 sm:px-3">
+                          <Pencil className="h-4 w-4 sm:mr-1" />
+                          <span className="hidden sm:inline">Edit</span>
                         </Button>
                       </Link>
                       <Button 
                         variant="destructive" 
                         size="sm"
+                        className="h-9 px-2 sm:px-3"
                         onClick={() => handleDelete(event.id)}
                         disabled={isDeleting && deleteId === event.id}
                       >
                         {isDeleting && deleteId === event.id ? (
-                          <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                          <Loader2 className="h-4 w-4 animate-spin sm:mr-1" />
                         ) : (
-                          <Trash2 className="h-4 w-4 mr-1" />
+                          <>
+                            <Trash2 className="h-4 w-4 sm:mr-1" />
+                            <span className="hidden sm:inline">Delete</span>
+                          </>
                         )}
-                        Delete
                       </Button>
                     </div>
                   </td>

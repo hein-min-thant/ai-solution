@@ -186,12 +186,24 @@ function EventsPage() {
           Upcoming Events
         </h1>
         {isAdmin && (
-          <div className="flex space-x-4 justify-center md:justify-end">
+          <div className="flex flex-wrap gap-2 justify-center md:justify-end">
+            <Link href="/admin/events">
+              <Button variant="outline" className="whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="3" y1="9" x2="21" y2="9"></line>
+                  <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+                Admin Dashboard
+              </Button>
+            </Link>
             <Link href="/admin/inquiries">
-              <Button variant="outline">View Inquiries</Button>
+              <Button variant="outline" className="whitespace-nowrap">
+                View Inquiries
+              </Button>
             </Link>
             <Link href="/admin/events/new">
-              <Button>
+              <Button className="whitespace-nowrap">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Event
               </Button>

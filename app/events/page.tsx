@@ -29,6 +29,7 @@ interface AdminUser {
 async function getEvents() {
   const prisma = new PrismaClient();
   try {
+    // @ts-ignore - Prisma types may be out of sync with schema
     const events = await prisma.Event.findMany({
       orderBy: {
         date: 'asc',

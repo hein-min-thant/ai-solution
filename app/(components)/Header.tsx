@@ -47,9 +47,16 @@ const Header = () => {
   return (
     <div className="sticky top-0 bg-white z-50">
       <nav className="flex justify-between items-center px-4 sm:px-10 py-4 border-b border-gray-800/10 text-lg">
-        <div>
+        <div className="flex items-center">
           <Link href="/">
-            <Image src="/logo.png" width={80} height={40} alt="logo" className="h-8 w-auto" />
+            <Image 
+              src="/logo.png" 
+              width={120} 
+              height={60} 
+              alt="logo" 
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain" 
+              priority
+            />
           </Link>
         </div>
         

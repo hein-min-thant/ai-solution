@@ -76,6 +76,12 @@ const Header = () => {
           </Link>
           <Link
             className="text-blue-600 hover:text-amber-600 transition-colors duration-300"
+            href={"/events"}
+          >
+            Events
+          </Link>
+          <Link
+            className="text-blue-600 hover:text-amber-600 transition-colors duration-300"
             href={"/articles"}
           >
             Articles
@@ -139,6 +145,13 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Solutions
+            </Link>
+            <Link
+              className="text-blue-600 hover:text-amber-600 transition-colors duration-300"
+              href={"/events"}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Events
             </Link>
             <Link
               className="text-blue-600 hover:text-amber-600 transition-colors duration-300"

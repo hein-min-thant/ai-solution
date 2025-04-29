@@ -29,8 +29,25 @@ model ContactInquiry {
   createdAt   DateTime  @default(now()) // Timestamp when the inquiry was received
 }
 
-model AdminUser{
+model AdminUser {
   id          String    @id @default(cuid())
   username    String    @unique
   password    String
+  events      Event[]   // Relation to events created by this admin
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  name        String
+  date        String
+  time        String?
+  location    String
+  description String
+  link        String?
+  category    String
+  image       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   AdminUser @relation(fields: [adminId], references: [id])
+  adminId     String
 }

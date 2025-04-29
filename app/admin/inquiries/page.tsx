@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table"; // Shadcn UI Table components
 import { Button } from "@/components/ui/button"; // Shadcn UI Button component
 import { Skeleton } from "@/components/ui/skeleton"; // Shadcn UI Skeleton component (optional loading state)
+import { Trash2, Loader2 } from "lucide-react"; // Icons for delete and loading
 
 // Define the type for a contact inquiry (should match your Prisma schema)
 interface ContactInquiry {
@@ -35,8 +36,46 @@ export default function AdminInquiriesPage() {
   const [isLoading, setIsLoading] = useState(true);
   // State to store any error messages
   const [error, setError] = useState<string | null>(null);
+  // State to track which inquiry is being deleted
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   // Get the router instance for potential redirects (e.g., if API returns 401)
   const router = useRouter();
+
+  // Function to handle inquiry deletion
+  const handleDeleteInquiry = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this inquiry?")) {
+      return;
+    }
+    
+    setDeletingId(id);
+    
+    try {
+      const response = await fetch(`/api/admin/inquiries/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          router.push("/admin/login");
+          return;
+        }
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete inquiry");
+      }
+      
+      // Remove the deleted inquiry from the state
+      setInquiries(inquiries.filter(inquiry => inquiry.id !== id));
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error deleting inquiry:", err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // useEffect hook to fetch inquiries when the component mounts
   useEffect(() => {
@@ -121,20 +160,17 @@ export default function AdminInquiriesPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead className="hidden sm:table-cell">Email</TableHead>
               <TableHead className="hidden md:table-cell">
                 Company Name
-              </TableHead>{" "}
-              {/* Hide on small screens */}
+              </TableHead>
               <TableHead className="hidden sm:table-cell">
                 Country
-              </TableHead>{" "}
-              {/* Hide on extra small screens */}
+              </TableHead>
               <TableHead className="hidden lg:table-cell">
                 Received At
-              </TableHead>{" "}
-              {/* Hide on large screens */}
-              <TableHead className="text-right">View</TableHead>
+              </TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -143,8 +179,13 @@ export default function AdminInquiriesPage() {
               <TableRow key={inquiry.id}>
                 {" "}
                 {/* Use inquiry.id as the unique key */}
-                <TableCell className="font-medium">{inquiry.name}</TableCell>
-                <TableCell>{inquiry.email}</TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{inquiry.name}</span>
+                    <span className="text-sm text-gray-500 sm:hidden">{inquiry.email}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">{inquiry.email}</TableCell>
                 <TableCell className="hidden md:table-cell">
                   {inquiry.companyName}
                 </TableCell>
@@ -153,16 +194,34 @@ export default function AdminInquiriesPage() {
                 </TableCell>
                 <TableCell className="hidden lg:table-cell">
                   {new Date(inquiry.createdAt).toLocaleString()}
-                </TableCell>{" "}
-                {/* Format the date */}
-                <TableCell className="text-right">
-                  {/* Link to the single inquiry page using dynamic route */}
-                  <Link href={`/admin/inquiries/${inquiry.id}`}>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>{" "}
-                    {/* Shadcn Button as a link */}
-                  </Link>
+                </TableCell>
+                <TableCell>
+                  <div className="flex justify-end space-x-2">
+                    {/* Link to the single inquiry page using dynamic route */}
+                    <Link href={`/admin/inquiries/${inquiry.id}`}>
+                      <Button variant="outline" size="sm" className="whitespace-nowrap">
+                        <span className="sm:hidden">View</span>
+                        <span className="hidden sm:inline">View Details</span>
+                      </Button>
+                    </Link>
+                    
+                    {/* Delete button */}
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => handleDeleteInquiry(inquiry.id)}
+                      disabled={deletingId === inquiry.id}
+                    >
+                      {deletingId === inquiry.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Delete</span>
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
